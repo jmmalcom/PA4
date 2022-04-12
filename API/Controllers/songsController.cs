@@ -44,8 +44,10 @@ namespace API.Controllers
         // PUT: api/songs/5
         [EnableCors("AnotherPolicy")]
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Song value)
         {
+            IUpdateSongs updateSongs = new UpdateSong();
+            updateSongs.Update(value);
         }
 
         // DELETE: api/songs/5

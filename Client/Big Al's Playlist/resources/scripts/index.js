@@ -52,13 +52,21 @@ function populateCards(){
         var count = 0;
        json.forEach((song) => {  
         console.log(song.songTitle)
+        console.log(song);
         if (count % 3 != 0)
         {
             html += `<div class="card col-md-4 bg-dark text-white">`;
             html += `<img src="./resources/images/music.jpeg" class="card-img" alt="...">`;
             html += `<div class="card-img-overlay">`;
-            //if song.favorited == 'y'
             html += `<h5 value =${song.songID} class="card-title">`+song.songTitle+`</h5>`;
+            if (song.favorited == 'n')
+            {
+                html += `<button value = ${song.songID} id = 1 class="btn" onclick = "putSong(this)"><i class="fa-solid fa-star" ></i></button>`
+            }
+            if(song.favorited =='y')
+            {
+                html+= `<button id = ${song.songID} class="favoritebtn" onclick = "putSong(this)"><i class="fa-solid fa-star" ></i></button>`  
+            }
             html += `</div>`;
             html += `</div>`;
         }
@@ -71,6 +79,14 @@ function populateCards(){
             html += `<img src="./resources/images/music.jpeg" class="card-img" alt="...">`;
             html += `<div class="card-img-overlay">`;
             html += `<h5 value =${song.songID} class="card-title">`+song.songTitle+`</h5>`;
+            if (song.favorited == 'n')
+            {
+                html += `<button id = 1 class="btn" onclick = "putSong(this)"><i class="fa-solid fa-star" ></i></button>`
+            }
+            if(song.favorited =='y')
+            {
+                html+= `<button id =favoritestar  class="favoritebtn" onclick = "putSong(this)")><i class="fa-solid fa-star" ></i></button>`  
+            }
             html += `</div>`;
             html += `</div>`;
         }
@@ -78,7 +94,7 @@ function populateCards(){
         })
             html += '</div>'
         document.getElementById("cards").innerHTML = html;
-   
+        console.log(songList);
     }).catch(function(error){
         console.log(error);
     })
@@ -86,19 +102,66 @@ function populateCards(){
 
 function postSong(){
     const SongTitle = document.getElementById("title").value;
+    songList.forEach((song) =>{
+        if(song.songTitle == SongTitle)
+        {
+            alert("Sorry, you cannot add songs with the same name. Hopefully, I'll get better with JavaScript/HTML soon. :(")
+            SongTitle = "//"
+        }
+    })
+    if(SongTitle != "//")
+    {
+        fetch(baseURl, {
+            method: "POST",
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json'
+            },
+            body: JSON.stringify({
+                SongTitle: SongTitle
+            })
+        })
+        .then((response)=>{
+            console.log(response);
+            populateCards();
+        })
+    }
+}
 
-    fetch(baseURl, {
-        method: "POST",
+function putSong(element){
+    var parent = element.previousElementSibling;
+    console.log(parent);
+    var content = parent.innerHTML;
+    console.log(content);
+  
+    songList.forEach((song) =>{
+        if(song.songTitle == content)
+        {
+            foundSong = song;
+        }
+    })
+    if(foundSong.favorited == "n")
+    {
+        foundSong.favorited ='y'
+    }
+    else if (foundSong.favorited == "y")
+    {
+        foundSong.favorited ='n'
+    }
+    const putSongURl = baseURl + "/" + foundSong.id
+    console.log(putSongURl);
+    fetch(putSongURl, {
+        method: "PUT",
         headers: {
             "Accept": 'application/json',
-            "Content-Type": 'application/json'
+            "Content-Type": 'application/json',
+
         },
-        body: JSON.stringify({
-            SongTitle: SongTitle
-        })
+        body: JSON.stringify(foundSong)
     })
-    .then((response)=>{
-        console.log(response);
-        populateCards();
-    })
+    .then((response) =>{
+    console.log(response);
+    populateCards();
+    });
 }
+

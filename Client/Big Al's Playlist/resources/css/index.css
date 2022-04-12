@@ -24,3 +24,17 @@
     max-width: fit-content;
     padding: 5px;
 }
+
+.btn{
+    text-align: left;
+    color:grey;
+    font-size: 100%;
+
+}
+
+.favoritebtn{
+    text-align: left;
+    color:yellow;
+    font-size: 150%;
+
+}

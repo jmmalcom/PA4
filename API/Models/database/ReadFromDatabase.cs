@@ -32,11 +32,11 @@ namespace mis321_pa3_jmmalcom.database
                     ID = reader.IsDBNull(0) ? 0 : reader.GetInt32(0),
                     SongTitle = reader.GetString(1),
                     SongTimestamp = DateTime.Parse(reader.GetString(2)),
-                    Deleted = reader.GetString(3)
+                    Deleted = reader.GetString(3),
+                    Favorited = reader.GetString(4)
                 });
             }
             con.Close();
-
             return songs;
 
 
