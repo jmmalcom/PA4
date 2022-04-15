@@ -8,17 +8,17 @@ function findSongs(){
 
     url += searchString;
 
-    console.log(searchString)
+    
 
     fetch(url).then(function(response) {
-		console.log(response);
+		
 		return response.json();
 	}).then(function(json) {
-        console.log(json)
+        
         let html = ``;
 
 		json.forEach((song) => {
-            console.log(song.title)
+            
             html += `<div class="card col-md-4 bg-dark text-white">`;
 			html += `<img src="./resources/images/music.jpeg" class="card-img" alt="...">`;
 			html += `<div class="card-img-overlay">`;
@@ -51,8 +51,8 @@ function populateCards(){
         html += '<div class="row">'
         var count = 0;
        json.forEach((song) => {  
-        console.log(song.songTitle)
-        console.log(song);
+        
+        
         if (count % 3 != 0)
         {
             html += `<div class="card col-md-4 bg-dark text-white">`;
@@ -94,7 +94,7 @@ function populateCards(){
         })
             html += '</div>'
         document.getElementById("cards").innerHTML = html;
-        console.log(songList);
+        
     }).catch(function(error){
         console.log(error);
     })
@@ -122,7 +122,7 @@ function postSong(){
             })
         })
         .then((response)=>{
-            console.log(response);
+            
             populateCards();
         })
     }
@@ -130,9 +130,8 @@ function postSong(){
 
 function putSong(element){
     var parent = element.previousElementSibling;
-    console.log(parent);
+
     var content = parent.innerHTML;
-    console.log(content);
   
     songList.forEach((song) =>{
         if(song.songTitle == content)
@@ -149,7 +148,7 @@ function putSong(element){
         foundSong.favorited ='n'
     }
     const putSongURl = baseURl + "/" + foundSong.id
-    console.log(putSongURl);
+    
     fetch(putSongURl, {
         method: "PUT",
         headers: {
@@ -163,5 +162,48 @@ function putSong(element){
     console.log(response);
     populateCards();
     });
+}
+
+function deleteSong(){
+   const deletedSong = document.getElementById("deletedSong").value;
+   var foundSong;
+    songList.forEach((song) =>{
+        if(song.songTitle.toLowerCase() == deletedSong.toLowerCase())
+        {
+            foundSong = song;
+        }
+
+    })
+
+    if(foundSong == undefined)
+    {
+        alert("Song was not found.")
+    }
+
+    if(confirm("Song " + foundSong.songTitle + " will now be deleted.")  == true)
+    {
+        
+        const putSongURl = baseURl + "/" + foundSong.id
+    
+        fetch(putSongURl, {
+            method: "DELETE",
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": 'application/json',
+    
+            },
+            body: JSON.stringify(foundSong.id)
+        })
+        .then((response) =>{
+        console.log(response);
+        populateCards();
+        });
+        
+    } else{
+        alert("Song " + foundSong.songTitle + " was not deleted.")
+        document.getElementById("deletedSong").value = "";
+        document.getElementById("deletedSong").focus();
+    }
+    // alert("Song " + foundSong.songTitle + " will now be deleted.");
 }
 

@@ -94,6 +94,14 @@
           </form>
     </div>
 
+    <div id="add" class="container">
+      <form name = "add" onsubmit="return false;" method="dialog">
+          <label class="form-label" for="title">Delete a song:</label><br>
+          <input class="form-control" type="text" id="deletedSong" name="deletedSong" ><br>
+          <button class="btn btn-dark" onclick="deleteSong()">Delete Song</button>
+        </form>
+  </div>
+
     <div id="search" class="container">
         <form onsubmit="return false;">
             <label class="form-label" for="searchSong">Find a song here:</label><br>

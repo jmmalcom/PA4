@@ -20,7 +20,7 @@ namespace mis321_pa3_jmmalcom.database
             using var con = new MySqlConnection(cs);
             con.Open();
 
-            string stm = @"Select * from songs";
+            string stm = @"Select * from songs order by SongTimestamp desc";
 
             using var cmd = new MySqlCommand(stm, con);
             MySqlDataReader reader = cmd.ExecuteReader();
